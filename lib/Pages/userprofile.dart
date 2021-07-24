@@ -1,6 +1,9 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_social_media/Provider/userprofile.dart';
 import 'package:flutter_social_media/Widgets/userallpost.dart';
+import 'package:flutter_social_media/Widgets/useremail.dart';
+import 'package:provider/provider.dart';
 
 class UserProfile extends StatefulWidget {
   final DocumentSnapshot documentSnapshot;
@@ -14,209 +17,328 @@ class UserProfile extends StatefulWidget {
 class _UserProfileState extends State<UserProfile> {
   @override
   Widget build(BuildContext context) {
+    final userallpost = Provider.of<Userprofileprovider>(context);
     return Scaffold(
       body: SafeArea(
-        child: Container(
-            child: Column(
-          children: [
-            Center(
-              child: Container(
-                margin: EdgeInsets.all(10.0),
-                child: widget.documentSnapshot['profilepic'] == null
-                    ? CircleAvatar(
-                        maxRadius: 70.0,
-                        backgroundImage: AssetImage('images/profilepic.jpg'),
-                      )
-                    : CircleAvatar(
-                        maxRadius: 70.0,
-                        backgroundImage:
-                            NetworkImage(widget.documentSnapshot['profilepic']),
-                      ),
-              ),
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Container(
-                  margin: EdgeInsets.all(10.0),
-                  decoration: BoxDecoration(
-                    color: Colors.grey[300],
-                    borderRadius: BorderRadius.circular(5.0),
-                  ),
-                  child: Material(
-                    color: Colors.transparent,
-                    child: InkWell(
-                      onTap: () {},
-                      borderRadius: BorderRadius.circular(5.0),
-                      focusColor: Colors.indigo,
-                      highlightColor: Colors.indigo,
-                      splashColor: Colors.indigo,
-                      child: Container(
-                        padding: EdgeInsets.all(10.0),
-                        child: Text("Message"),
-                      ),
-                    ),
-                  ),
-                ),
-                Container(
-                  margin: EdgeInsets.all(10.0),
-                  decoration: BoxDecoration(
-                    color: Colors.grey[300],
-                    borderRadius: BorderRadius.circular(5.0),
-                  ),
-                  child: Material(
-                    color: Colors.transparent,
-                    child: InkWell(
-                      onTap: () {},
-                      borderRadius: BorderRadius.circular(5.0),
-                      focusColor: Colors.indigo,
-                      highlightColor: Colors.indigo,
-                      splashColor: Colors.indigo,
-                      child: Container(
-                        padding: EdgeInsets.all(10.0),
-                        child: Text("Add Friend"),
-                      ),
-                    ),
-                  ),
-                ),
-                Container(
-                  margin: EdgeInsets.all(10.0),
-                  decoration: BoxDecoration(
-                    color: Colors.grey[300],
-                    borderRadius: BorderRadius.circular(5.0),
-                  ),
-                  child: Material(
-                    color: Colors.transparent,
-                    child: InkWell(
-                      onTap: () {},
-                      borderRadius: BorderRadius.circular(5.0),
-                      focusColor: Colors.indigo,
-                      highlightColor: Colors.indigo,
-                      splashColor: Colors.indigo,
-                      child: Container(
-                        padding: EdgeInsets.all(10.0),
-                        child: Text("Follow"),
-                      ),
-                    ),
-                  ),
-                )
-              ],
-            ),
-            SizedBox(
-              height: 20.0,
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
-              children: [
-                Container(
-                  decoration: BoxDecoration(
-                      color: Colors.grey[300],
-                      borderRadius: BorderRadius.circular(5.0)),
-                  child: Material(
-                    color: Colors.transparent,
-                    child: InkWell(
-                      highlightColor: Colors.indigo,
-                      splashColor: Colors.indigo,
-                      onTap: () {},
-                      borderRadius: BorderRadius.circular(5.0),
-                      child: Container(
-                        padding: EdgeInsets.symmetric(
-                            horizontal: 20.0, vertical: 10.0),
-                        child: Column(
-                          children: [
-                            Text(
-                              "2",
-                              style: TextStyle(fontSize: 18.0),
-                            ),
-                            Text(
-                              "Post",
-                              style: TextStyle(fontSize: 18.0),
-                            )
-                          ],
-                        ),
-                      ),
-                    ),
-                  ),
-                ),
-                Container(
-                  decoration: BoxDecoration(
-                      color: Colors.grey[300],
-                      borderRadius: BorderRadius.circular(5.0)),
-                  child: Material(
-                    color: Colors.transparent,
-                    child: InkWell(
-                      highlightColor: Colors.indigo,
-                      splashColor: Colors.indigo,
-                      onTap: () {},
-                      borderRadius: BorderRadius.circular(5.0),
-                      child: Container(
-                        padding: EdgeInsets.symmetric(
-                            horizontal: 20.0, vertical: 10.0),
-                        child: Column(
-                          children: [
-                            Text(
-                              "2",
-                              style: TextStyle(fontSize: 18.0),
-                            ),
-                            Text(
-                              "Friends",
-                              style: TextStyle(fontSize: 18.0),
-                            )
-                          ],
-                        ),
-                      ),
-                    ),
-                  ),
-                ),
-                Container(
-                  decoration: BoxDecoration(
-                      color: Colors.grey[300],
-                      borderRadius: BorderRadius.circular(5.0)),
-                  child: Material(
-                    color: Colors.transparent,
-                    child: InkWell(
-                      highlightColor: Colors.indigo,
-                      splashColor: Colors.indigo,
-                      onTap: () {},
-                      borderRadius: BorderRadius.circular(5.0),
-                      child: Container(
-                        padding: EdgeInsets.symmetric(
-                            horizontal: 20.0, vertical: 10.0),
-                        child: Column(
-                          children: [
-                            Text(
-                              "2",
-                              style: TextStyle(fontSize: 18.0),
-                            ),
-                            Text(
-                              "Follower",
-                              style: TextStyle(fontSize: 18.0),
-                            )
-                          ],
-                        ),
-                      ),
-                    ),
-                  ),
-                )
-              ],
-            ),
-            SizedBox(
-              height: 10.0,
-            ),
-            Divider(),
-            Flexible(
-              child: Container(
-                child: PageView(
+        child: StreamBuilder<DocumentSnapshot>(
+            stream: userallpost.db
+                .collection("users")
+                .doc(Useremail.useremailget)
+                .snapshots(),
+            builder: (context, snapshot) {
+              if (snapshot.hasData) {
+                var useraccountdata = snapshot.data;
+                return Container(
+                    child: Column(
                   children: [
-                    UserAllPost(
-                      documentSnapshot: widget.documentSnapshot,
+                    Center(
+                      child: Container(
+                        margin: EdgeInsets.all(10.0),
+                        child: widget.documentSnapshot['profilepic'] == null
+                            ? CircleAvatar(
+                                maxRadius: 70.0,
+                                backgroundImage:
+                                    AssetImage('images/profilepic.jpg'),
+                              )
+                            : CircleAvatar(
+                                maxRadius: 70.0,
+                                backgroundImage: NetworkImage(
+                                    widget.documentSnapshot['profilepic']),
+                              ),
+                      ),
                     ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Useremail.useremailget ==
+                                widget.documentSnapshot['email']
+                            ? Container(
+                                margin: EdgeInsets.all(10.0),
+                                decoration: BoxDecoration(
+                                  color: Colors.grey[300],
+                                  borderRadius: BorderRadius.circular(5.0),
+                                ),
+                                child: Material(
+                                  color: Colors.transparent,
+                                  child: InkWell(
+                                    onTap: () {},
+                                    borderRadius: BorderRadius.circular(5.0),
+                                    focusColor: Colors.indigo,
+                                    highlightColor: Colors.indigo,
+                                    splashColor: Colors.indigo,
+                                    child: Container(
+                                      padding: EdgeInsets.all(10.0),
+                                      child: Text("Edit Profile"),
+                                    ),
+                                  ),
+                                ),
+                              )
+                            : Container(
+                                margin: EdgeInsets.all(10.0),
+                                decoration: BoxDecoration(
+                                  color: Colors.grey[300],
+                                  borderRadius: BorderRadius.circular(5.0),
+                                ),
+                                child: Material(
+                                  color: Colors.transparent,
+                                  child: InkWell(
+                                    onTap: () {},
+                                    borderRadius: BorderRadius.circular(5.0),
+                                    focusColor: Colors.indigo,
+                                    highlightColor: Colors.indigo,
+                                    splashColor: Colors.indigo,
+                                    child: Container(
+                                      padding: EdgeInsets.all(10.0),
+                                      child: Text("Message"),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                        Useremail.useremailget ==
+                                widget.documentSnapshot['email']
+                            ? Container()
+                            : Container(
+                                margin: EdgeInsets.all(10.0),
+                                decoration: BoxDecoration(
+                                  color: Colors.grey[300],
+                                  borderRadius: BorderRadius.circular(5.0),
+                                ),
+                                child: Material(
+                                  color: Colors.transparent,
+                                  child: InkWell(
+                                    onTap: () {
+                                      if (useraccountdata!['sendfriendrequest']
+                                          .contains(widget
+                                              .documentSnapshot['email'])) {
+                                        userallpost.sendrequestdelect(
+                                            widget.documentSnapshot['email'],
+                                            useraccountdata['email'],
+                                            useraccountdata['fastname'],
+                                            useraccountdata['lastname'],
+                                            useraccountdata['profilepicurl']);
+                                      } else {
+                                        userallpost.sendfriendreq(
+                                            widget.documentSnapshot['email'],
+                                            useraccountdata['email'],
+                                            useraccountdata['fastname'],
+                                            useraccountdata['lastname'],
+                                            useraccountdata['profilepicurl']);
+                                      }
+
+                                      print(
+                                        useraccountdata['fastname'],
+                                      );
+                                    },
+                                    borderRadius: BorderRadius.circular(5.0),
+                                    focusColor: Colors.indigo,
+                                    highlightColor: Colors.indigo,
+                                    splashColor: Colors.indigo,
+                                    child: Container(
+                                      padding: EdgeInsets.all(10.0),
+                                      child: useraccountdata![
+                                                  'sendfriendrequest']
+                                              .contains(widget
+                                                  .documentSnapshot['email'])
+                                          ? Text("requested",
+                                              style: TextStyle(
+                                                  color: Colors.indigoAccent))
+                                          : Text("Add Friend"),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                        Useremail.useremailget ==
+                                widget.documentSnapshot['email']
+                            ? Container()
+                            : Container(
+                                margin: EdgeInsets.all(10.0),
+                                decoration: BoxDecoration(
+                                  color: Colors.grey[300],
+                                  borderRadius: BorderRadius.circular(5.0),
+                                ),
+                                child: Material(
+                                  color: Colors.transparent,
+                                  child: InkWell(
+                                    onTap: () {
+                                      if (useraccountdata!['following']
+                                          .contains(widget
+                                              .documentSnapshot['email'])) {
+                                        userallpost.followremove(
+                                            widget.documentSnapshot['email'],
+                                            useraccountdata['email'],
+                                            useraccountdata['fastname'],
+                                            useraccountdata['lastname'],
+                                            useraccountdata['profilepicurl']);
+                                      } else {
+                                        userallpost.getfollow(
+                                            widget.documentSnapshot['email'],
+                                            useraccountdata['email'],
+                                            useraccountdata['fastname'],
+                                            useraccountdata['lastname'],
+                                            useraccountdata['profilepicurl']);
+                                      }
+                                    },
+                                    borderRadius: BorderRadius.circular(5.0),
+                                    focusColor: Colors.indigo,
+                                    highlightColor: Colors.indigo,
+                                    splashColor: Colors.indigo,
+                                    child: Container(
+                                      padding: EdgeInsets.all(10.0),
+                                      child: useraccountdata!['following']
+                                              .contains(widget
+                                                  .documentSnapshot['email'])
+                                          ? Text(
+                                              "Following",
+                                              style: TextStyle(
+                                                  color: Colors.indigoAccent),
+                                            )
+                                          : Text("Follow"),
+                                    ),
+                                  ),
+                                ),
+                              )
+                      ],
+                    ),
+                    SizedBox(
+                      height: 20.0,
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceAround,
+                      children: [
+                        Container(
+                          decoration: BoxDecoration(
+                              color: Colors.grey[300],
+                              borderRadius: BorderRadius.circular(5.0)),
+                          child: Material(
+                            color: Colors.transparent,
+                            child: InkWell(
+                              highlightColor: Colors.indigo,
+                              splashColor: Colors.indigo,
+                              onTap: () {},
+                              borderRadius: BorderRadius.circular(5.0),
+                              child: Container(
+                                padding: EdgeInsets.symmetric(
+                                    horizontal: 20.0, vertical: 10.0),
+                                child: Column(
+                                  children: [
+                                    StreamBuilder<QuerySnapshot>(
+                                        stream: userallpost.getuserallpost(
+                                            widget.documentSnapshot['email']),
+                                        builder: (context, snapshot) {
+                                          if (snapshot.hasData) {
+                                            List postlist = snapshot.data!.docs
+                                                .map((e) => e.id)
+                                                .toList();
+                                            return Text(
+                                              "${postlist.length}",
+                                              style: TextStyle(fontSize: 18.0),
+                                            );
+                                          } else {
+                                            return Container(
+                                              child: Center(
+                                                child:
+                                                    CircularProgressIndicator(),
+                                              ),
+                                            );
+                                          }
+                                        }),
+                                    Text(
+                                      "Post",
+                                      style: TextStyle(fontSize: 18.0),
+                                    )
+                                  ],
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),
+                        Container(
+                          decoration: BoxDecoration(
+                              color: Colors.grey[300],
+                              borderRadius: BorderRadius.circular(5.0)),
+                          child: Material(
+                            color: Colors.transparent,
+                            child: InkWell(
+                              highlightColor: Colors.indigo,
+                              splashColor: Colors.indigo,
+                              onTap: () {},
+                              borderRadius: BorderRadius.circular(5.0),
+                              child: Container(
+                                padding: EdgeInsets.symmetric(
+                                    horizontal: 20.0, vertical: 10.0),
+                                child: Column(
+                                  children: [
+                                    Text(
+                                      "2",
+                                      style: TextStyle(fontSize: 18.0),
+                                    ),
+                                    Text(
+                                      "Friends",
+                                      style: TextStyle(fontSize: 18.0),
+                                    )
+                                  ],
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),
+                        Container(
+                          decoration: BoxDecoration(
+                              color: Colors.grey[300],
+                              borderRadius: BorderRadius.circular(5.0)),
+                          child: Material(
+                            color: Colors.transparent,
+                            child: InkWell(
+                              highlightColor: Colors.indigo,
+                              splashColor: Colors.indigo,
+                              onTap: () {},
+                              borderRadius: BorderRadius.circular(5.0),
+                              child: Container(
+                                padding: EdgeInsets.symmetric(
+                                    horizontal: 20.0, vertical: 10.0),
+                                child: Column(
+                                  children: [
+                                    Text(
+                                      "2",
+                                      style: TextStyle(fontSize: 18.0),
+                                    ),
+                                    Text(
+                                      "Follower",
+                                      style: TextStyle(fontSize: 18.0),
+                                    )
+                                  ],
+                                ),
+                              ),
+                            ),
+                          ),
+                        )
+                      ],
+                    ),
+                    SizedBox(
+                      height: 10.0,
+                    ),
+                    Divider(),
+                    Flexible(
+                      child: Container(
+                        child: PageView(
+                          children: [
+                            UserAllPost(
+                              documentSnapshot: widget.documentSnapshot,
+                            ),
+                          ],
+                        ),
+                      ),
+                    )
                   ],
-                ),
-              ),
-            )
-          ],
-        )),
+                ));
+              } else {
+                return Container(
+                  child: Center(
+                    child: CircularProgressIndicator(),
+                  ),
+                );
+              }
+            }),
       ),
     );
   }

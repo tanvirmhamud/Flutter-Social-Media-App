@@ -10,8 +10,8 @@ class Accountprovider extends ChangeNotifier {
   bool isloading = false;
   bool loginbuttonshow = false;
 
-  Future accountcreated(BuildContext context,
-      String _fastname, _lastname, _username, _email, _password) async {
+  Future accountcreated(BuildContext context, String _fastname, _lastname,
+      _username, _email, _password) async {
     try {
       isloading = true;
 
@@ -63,7 +63,9 @@ class Accountprovider extends ChangeNotifier {
       "country": "",
       "phone": "",
       "address": "",
-      "profilepic": false
+      "profilepic": false,
+      "friendrequest": FieldValue.arrayUnion([]),
+      "sendfriendrequest": FieldValue.arrayUnion([]),
     }).then((value) {
       print("Added Successfull");
     });
