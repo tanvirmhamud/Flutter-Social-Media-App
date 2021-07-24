@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_social_media/Pages/userprofile.dart';
 import 'package:flutter_social_media/Provider/firebasedata.dart';
 import 'package:flutter_social_media/Provider/likefunction.dart';
 import 'package:flutter_social_media/Widgets/appbar.dart';
@@ -85,23 +86,36 @@ class _PostPagesState extends State<PostPages> {
                                           backgroundImage: NetworkImage(snapshot
                                               .data!.docs[index]['profilepic']),
                                         ),
-                                        Container(
-                                          margin: EdgeInsets.only(left: 10.0),
-                                          child: Column(
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.start,
-                                            children: [
-                                              Text(
-                                                  "${postdocumets['fastname']} ${postdocumets['lastname']}"),
-                                              SizedBox(
-                                                height: 5.0,
-                                              ),
-                                              Text(
-                                                "@${postdocumets['username']}",
-                                                style: TextStyle(
-                                                    color: Colors.grey[400]),
-                                              ),
-                                            ],
+                                        InkWell(
+                                          onTap: () {
+                                            Navigator.push(
+                                                context,
+                                                MaterialPageRoute(
+                                                  builder: (context) =>
+                                                      UserProfile(
+                                                    documentSnapshot:
+                                                        postdocumets,
+                                                  ),
+                                                ));
+                                          },
+                                          child: Container(
+                                            margin: EdgeInsets.only(left: 10.0),
+                                            child: Column(
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.start,
+                                              children: [
+                                                Text(
+                                                    "${postdocumets['fastname']} ${postdocumets['lastname']}"),
+                                                SizedBox(
+                                                  height: 5.0,
+                                                ),
+                                                Text(
+                                                  "@${postdocumets['username']}",
+                                                  style: TextStyle(
+                                                      color: Colors.grey[400]),
+                                                ),
+                                              ],
+                                            ),
                                           ),
                                         ),
                                         Spacer(),
