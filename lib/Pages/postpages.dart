@@ -82,10 +82,15 @@ class _PostPagesState extends State<PostPages> {
                                   children: [
                                     Row(
                                       children: [
-                                        CircleAvatar(
-                                          backgroundImage: NetworkImage(snapshot
-                                              .data!.docs[index]['profilepic']),
-                                        ),
+                                        postdocumets['profilepic'] == null
+                                            ? CircleAvatar(
+                                                backgroundImage: AssetImage(
+                                                    'images/profilepic.jpg'),
+                                              )
+                                            : CircleAvatar(
+                                                backgroundImage: NetworkImage(
+                                                    postdocumets['profilepic']),
+                                              ),
                                         InkWell(
                                           onTap: () {
                                             Navigator.push(

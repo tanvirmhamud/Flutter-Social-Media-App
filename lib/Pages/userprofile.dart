@@ -47,6 +47,13 @@ class _UserProfileState extends State<UserProfile> {
                               ),
                       ),
                     ),
+                    Text(
+                      "${widget.documentSnapshot['fastname']} ${widget.documentSnapshot['lastname']}",
+                      style: TextStyle(fontSize: 18),
+                    ),
+                    SizedBox(
+                      height: 15.0,
+                    ),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
@@ -124,10 +131,6 @@ class _UserProfileState extends State<UserProfile> {
                                             useraccountdata['lastname'],
                                             useraccountdata['profilepicurl']);
                                       }
-
-                                      print(
-                                        useraccountdata['fastname'],
-                                      );
                                     },
                                     borderRadius: BorderRadius.circular(5.0),
                                     focusColor: Colors.indigo,
@@ -268,10 +271,28 @@ class _UserProfileState extends State<UserProfile> {
                                     horizontal: 20.0, vertical: 10.0),
                                 child: Column(
                                   children: [
-                                    Text(
-                                      "2",
-                                      style: TextStyle(fontSize: 18.0),
-                                    ),
+                                    StreamBuilder<DocumentSnapshot>(
+                                        stream: userallpost.db
+                                            .collection('users')
+                                            .doc(widget
+                                                .documentSnapshot['email'])
+                                            .snapshots(),
+                                        builder: (context, snapshot) {
+                                          if (snapshot.hasData) {
+                                            var friends = snapshot.data;
+                                            return Text(
+                                              "${friends!['friends'].length}",
+                                              style: TextStyle(fontSize: 18.0),
+                                            );
+                                          } else {
+                                            return Container(
+                                              child: Center(
+                                                child:
+                                                    CircularProgressIndicator(),
+                                              ),
+                                            );
+                                          }
+                                        }),
                                     Text(
                                       "Friends",
                                       style: TextStyle(fontSize: 18.0),
@@ -298,10 +319,28 @@ class _UserProfileState extends State<UserProfile> {
                                     horizontal: 20.0, vertical: 10.0),
                                 child: Column(
                                   children: [
-                                    Text(
-                                      "2",
-                                      style: TextStyle(fontSize: 18.0),
-                                    ),
+                                    StreamBuilder<DocumentSnapshot>(
+                                        stream: userallpost.db
+                                            .collection('users')
+                                            .doc(widget
+                                                .documentSnapshot['email'])
+                                            .snapshots(),
+                                        builder: (context, snapshot) {
+                                          if (snapshot.hasData) {
+                                            var follower = snapshot.data;
+                                            return Text(
+                                              "${follower!['follower'].length}",
+                                              style: TextStyle(fontSize: 18.0),
+                                            );
+                                          } else {
+                                            return Container(
+                                              child: Center(
+                                                child:
+                                                    CircularProgressIndicator(),
+                                              ),
+                                            );
+                                          }
+                                        }),
                                     Text(
                                       "Follower",
                                       style: TextStyle(fontSize: 18.0),

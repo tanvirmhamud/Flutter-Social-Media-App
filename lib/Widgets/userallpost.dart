@@ -42,10 +42,15 @@ class _UserAllPostState extends State<UserAllPost> {
                         children: [
                           Row(
                             children: [
-                              CircleAvatar(
-                                backgroundImage:
-                                    NetworkImage(data['profilepic']),
-                              ),
+                              data['profilepic'] == null
+                                  ? CircleAvatar(
+                                      backgroundImage:
+                                          AssetImage('images/profilepic.jpg'),
+                                    )
+                                  : CircleAvatar(
+                                      backgroundImage:
+                                          NetworkImage(data['profilepic']),
+                                    ),
                               InkWell(
                                 onTap: () {},
                                 child: Container(

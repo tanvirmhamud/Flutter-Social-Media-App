@@ -18,32 +18,49 @@ class ImageUploadProvider extends ChangeNotifier {
   }
 
   Future uploadimagefirebase(String useremail) async {
-    final XFile? _imagefile = await picker.pickImage(source: ImageSource.gallery);
+    final XFile? _imagefile =
+        await picker.pickImage(source: ImageSource.gallery);
     imageFile = _imagefile;
     var file = File(_imagefile!.path);
 
     if (imageFileList != null) {
-      var snapshot = await _firebasestorage.ref().child('profileimages/${useremail}/profileimage').putFile(file);
+      var snapshot = await _firebasestorage
+          .ref()
+          .child('profileimages/${useremail}/profileimage')
+          .putFile(file);
       var downloadurl = await snapshot.ref.getDownloadURL();
-      await FirebaseFirestore.instance.collection('users').doc(useremail).collection('profilepic').doc(useremail).set({"profile-imageurl": downloadurl}).then((value) {
+      await FirebaseFirestore.instance
+          .collection('users')
+          .doc(useremail)
+          .collection('profilepic')
+          .doc(useremail)
+          .set({"profile-imageurl": downloadurl}).then((value) {
+        print("Image Upload successfull");
+        notifyListeners();
+      });
+      await FirebaseFirestore.instance
+          .collection('users')
+          .doc(useremail)
+          .update({"profilepicurl": downloadurl}).then((value) {
         print("Image Upload successfull");
         notifyListeners();
       });
 
-
-      var collection = FirebaseFirestore.instance.collection('users').doc(useremail).collection('post');
+      var collection = FirebaseFirestore.instance
+          .collection('users')
+          .doc(useremail)
+          .collection('post');
       QuerySnapshot documents = await collection.get();
-      for(var doc in documents.docs){
-        doc.reference.update({
-          "profilepic" : downloadurl
-        });
+      for (var doc in documents.docs) {
+        doc.reference.update({"profilepic": downloadurl});
       }
-
-
 
       print("Post Profile Pic update success");
       notifyListeners();
-      await FirebaseFirestore.instance.collection('users').doc(useremail).update({"profilepic": true}).then((value) {
+      await FirebaseFirestore.instance
+          .collection('users')
+          .doc(useremail)
+          .update({"profilepic": true}).then((value) {
         print("Profile Pic Is true");
         notifyListeners();
       });

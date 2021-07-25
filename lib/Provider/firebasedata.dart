@@ -10,7 +10,6 @@ class FirebasedataProvider extends ChangeNotifier {
   final FirebaseFirestore db = FirebaseFirestore.instance;
   final _firebasestorage = FirebaseStorage.instance;
 
-
   List<XFile>? postaddimageFileList;
   List<String> imageurl = [];
 
@@ -41,9 +40,8 @@ class FirebasedataProvider extends ChangeNotifier {
     return db.collection('users').snapshots();
   }
 
-
   Stream<QuerySnapshot>? getuserpostfirebase() {
-     return db.collectionGroup('post').where('post').snapshots();
+    return db.collectionGroup('post').where('post').snapshots();
   }
 
   Future? updatedata(String fastname, lastname, username, email, countryname,
@@ -72,8 +70,6 @@ class FirebasedataProvider extends ChangeNotifier {
         "username": username,
       });
     }
-
-
   }
 
   Future postimageupload() async {
@@ -82,7 +78,15 @@ class FirebasedataProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future firebasecreatedpostandimage(String useremail, List<String> _post, BuildContext context, String _fastname, _lastname, _username, _profilepic, bool _imageuploadbool) async {
+  Future firebasecreatedpostandimage(
+      String useremail,
+      List<String> _post,
+      BuildContext context,
+      String _fastname,
+      _lastname,
+      _username,
+      _profilepic,
+      bool _imageuploadbool) async {
     if (postaddimageFileList != null) {
       for (int i = 0; i < postaddimageFileList!.length; i++) {
         var file = File(postaddimageFileList![i].path);
@@ -96,13 +100,18 @@ class FirebasedataProvider extends ChangeNotifier {
       }
     }
 
-
-    await db
-        .collection('users')
-        .doc(useremail)
-        .collection('post')
-        .add({"post": FieldValue.arrayUnion(_post), "image": imageurl, "fastname" : _fastname, "lastname" : _lastname , "username" : _username, "profilepic" : _profilepic, "imageuploadbool" : _imageuploadbool}).then(
-            (value) {
+    await db.collection('users').doc(useremail).collection('post').add({
+      "post": FieldValue.arrayUnion(_post),
+      "image": imageurl,
+      "email": useremail,
+      "fastname": _fastname,
+      "lastname": _lastname,
+      "username": _username,
+      "profilepic": _profilepic,
+      "imageuploadbool": _imageuploadbool,
+      "comments": false,
+      "likeuser": FieldValue.arrayUnion([])
+    }).then((value) {
       ScaffoldMessenger.of(context)
           .showSnackBar(SnackBar(content: Text("Create Post Successfull")));
       print("created post successfull");
@@ -117,5 +126,4 @@ class FirebasedataProvider extends ChangeNotifier {
     });
     notifyListeners();
   }
-
 }

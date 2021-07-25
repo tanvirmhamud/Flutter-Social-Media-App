@@ -66,6 +66,9 @@ class Accountprovider extends ChangeNotifier {
       "profilepic": false,
       "friendrequest": FieldValue.arrayUnion([]),
       "sendfriendrequest": FieldValue.arrayUnion([]),
+      "friends": FieldValue.arrayUnion([]),
+      "follower": FieldValue.arrayUnion([]),
+      "following": FieldValue.arrayUnion([])
     }).then((value) {
       print("Added Successfull");
     });
