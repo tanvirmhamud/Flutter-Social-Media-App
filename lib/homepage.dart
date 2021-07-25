@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_social_media/Pages/Profilepage.dart';
 import 'package:flutter_social_media/Pages/chat.dart';
+import 'package:flutter_social_media/Pages/friendrequest.dart';
 import 'package:flutter_social_media/Pages/notifaction.dart';
 import 'package:flutter_social_media/Pages/postadd.dart';
 import 'package:flutter_social_media/Pages/postpages.dart';
@@ -94,7 +95,7 @@ class _HomepageState extends State<Homepage> {
                     ChatPage(),
                     PostAddPage(),
                     NotificationPage(),
-                    ProfilePage(),
+                    FriendReqPage(),
                   ],
                 ),
               ),

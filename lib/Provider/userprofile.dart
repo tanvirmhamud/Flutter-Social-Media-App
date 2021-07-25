@@ -12,6 +12,14 @@ class Userprofileprovider extends ChangeNotifier {
         .snapshots();
   }
 
+  Stream<QuerySnapshot>? getuserallfriends(String accountuseremail) {
+    return db.collection('users').doc(accountuseremail).collection('friends').snapshots();
+  }
+
+   Stream<QuerySnapshot>? getuserallfollowers(String accountuseremail) {
+    return db.collection('users').doc(accountuseremail).collection('follower').snapshots();
+  }
+
   Future? sendfriendreq(
       String postuseremail,
       String accountuseremail,
@@ -26,7 +34,8 @@ class Userprofileprovider extends ChangeNotifier {
         .set({
       "fastname": accountuserfastname,
       "lastname": accountuserlastname,
-      "profilepic": accountuserprofilepic
+      "profilepic": accountuserprofilepic,
+      "acceptedfriendreq": false
     });
 
     await db.collection("users").doc(postuseremail).update({

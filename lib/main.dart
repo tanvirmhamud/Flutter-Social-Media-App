@@ -8,6 +8,7 @@ import 'package:flutter_social_media/homepage.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'Provider/commentfunction.dart';
+import 'Provider/friendreq.dart';
 import 'Provider/imageupload.dart';
 import 'Provider/likefunction.dart';
 import 'Provider/userprofile.dart';
@@ -19,6 +20,7 @@ void main() async {
   var finalemail = sharedPreferences.getString('email');
   runApp(MultiProvider(
       providers: [
+        ChangeNotifierProvider(create: (context) => FriendreqProvider()),
         ChangeNotifierProvider(create: (context) => Userprofileprovider()),
         ChangeNotifierProvider(create: (context) => CommentFunction()),
         ChangeNotifierProvider(create: (context) => Likeprovider()),

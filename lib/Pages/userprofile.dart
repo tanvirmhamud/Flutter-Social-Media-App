@@ -1,6 +1,9 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_social_media/Provider/friendreq.dart';
 import 'package:flutter_social_media/Provider/userprofile.dart';
+import 'package:flutter_social_media/Widgets/userallfollowers.dart';
+import 'package:flutter_social_media/Widgets/userallfriends.dart';
 import 'package:flutter_social_media/Widgets/userallpost.dart';
 import 'package:flutter_social_media/Widgets/useremail.dart';
 import 'package:provider/provider.dart';
@@ -18,6 +21,7 @@ class _UserProfileState extends State<UserProfile> {
   @override
   Widget build(BuildContext context) {
     final userallpost = Provider.of<Userprofileprovider>(context);
+    final friendfunction = Provider.of<FriendreqProvider>(context);
     return Scaffold(
       body: SafeArea(
         child: StreamBuilder<DocumentSnapshot>(
@@ -104,52 +108,120 @@ class _UserProfileState extends State<UserProfile> {
                         Useremail.useremailget ==
                                 widget.documentSnapshot['email']
                             ? Container()
-                            : Container(
-                                margin: EdgeInsets.all(10.0),
-                                decoration: BoxDecoration(
-                                  color: Colors.grey[300],
-                                  borderRadius: BorderRadius.circular(5.0),
-                                ),
-                                child: Material(
-                                  color: Colors.transparent,
-                                  child: InkWell(
-                                    onTap: () {
-                                      if (useraccountdata!['sendfriendrequest']
-                                          .contains(widget
-                                              .documentSnapshot['email'])) {
-                                        userallpost.sendrequestdelect(
-                                            widget.documentSnapshot['email'],
-                                            useraccountdata['email'],
-                                            useraccountdata['fastname'],
-                                            useraccountdata['lastname'],
-                                            useraccountdata['profilepicurl']);
-                                      } else {
-                                        userallpost.sendfriendreq(
-                                            widget.documentSnapshot['email'],
-                                            useraccountdata['email'],
-                                            useraccountdata['fastname'],
-                                            useraccountdata['lastname'],
-                                            useraccountdata['profilepicurl']);
-                                      }
-                                    },
-                                    borderRadius: BorderRadius.circular(5.0),
-                                    focusColor: Colors.indigo,
-                                    highlightColor: Colors.indigo,
-                                    splashColor: Colors.indigo,
-                                    child: Container(
-                                      padding: EdgeInsets.all(10.0),
-                                      child: useraccountdata![
+                            : useraccountdata!['friends']
+                                    .contains(widget.documentSnapshot['email'])
+                                ? Container(
+                                    margin: EdgeInsets.all(10.0),
+                                    decoration: BoxDecoration(
+                                      color: Colors.grey[300],
+                                      borderRadius: BorderRadius.circular(5.0),
+                                    ),
+                                    child: Material(
+                                      color: Colors.transparent,
+                                      child: InkWell(
+                                        onTap: () {
+                                          showModalBottomSheet(
+                                            context: context,
+                                            builder: (context) => Container(
+                                              height: MediaQuery.of(context)
+                                                      .size
+                                                      .height -
+                                                  750,
+                                              width: 100.0,
+                                              color: Colors.white,
+                                              child: Column(
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment.center,
+                                                children: [
+                                                  ElevatedButton(
+                                                      onPressed: () {
+                                                        friendfunction.deletefriend(
+                                                            useraccountdata[
+                                                                'email'],
+                                                            widget.documentSnapshot[
+                                                                'email']);
+                                                        Navigator.pop(context);
+                                                      },
+                                                      child: Container(
+                                                        child: Text(
+                                                            "Unfriend ${widget.documentSnapshot['fastname']} ${widget.documentSnapshot['lastname']}"),
+                                                      ))
+                                                ],
+                                              ),
+                                            ),
+                                          );
+                                        },
+                                        borderRadius:
+                                            BorderRadius.circular(5.0),
+                                        focusColor: Colors.indigo,
+                                        highlightColor: Colors.indigo,
+                                        splashColor: Colors.indigo,
+                                        child: Container(
+                                            padding: EdgeInsets.all(10.0),
+                                            child: Text(
+                                              "Friend",
+                                              style: TextStyle(
+                                                  color: Colors.indigoAccent),
+                                            )),
+                                      ),
+                                    ),
+                                  )
+                                : Container(
+                                    margin: EdgeInsets.all(10.0),
+                                    decoration: BoxDecoration(
+                                      color: Colors.grey[300],
+                                      borderRadius: BorderRadius.circular(5.0),
+                                    ),
+                                    child: Material(
+                                      color: Colors.transparent,
+                                      child: InkWell(
+                                        onTap: () {
+                                          if (useraccountdata[
                                                   'sendfriendrequest']
                                               .contains(widget
-                                                  .documentSnapshot['email'])
-                                          ? Text("requested",
-                                              style: TextStyle(
-                                                  color: Colors.indigoAccent))
-                                          : Text("Add Friend"),
+                                                  .documentSnapshot['email'])) {
+                                            userallpost.sendrequestdelect(
+                                                widget
+                                                    .documentSnapshot['email'],
+                                                useraccountdata['email'],
+                                                useraccountdata['fastname'],
+                                                useraccountdata['lastname'],
+                                                useraccountdata[
+                                                    'profilepicurl']);
+                                          } else {
+                                            userallpost.sendfriendreq(
+                                                widget
+                                                    .documentSnapshot['email'],
+                                                useraccountdata['email'],
+                                                useraccountdata['fastname'],
+                                                useraccountdata['lastname'],
+                                                useraccountdata[
+                                                    'profilepicurl']);
+                                          }
+                                        },
+                                        borderRadius:
+                                            BorderRadius.circular(5.0),
+                                        focusColor: Colors.indigo,
+                                        highlightColor: Colors.indigo,
+                                        splashColor: Colors.indigo,
+                                        child: Container(
+                                          padding: EdgeInsets.all(10.0),
+                                          child: useraccountdata[
+                                                      'sendfriendrequest']
+                                                  .contains(
+                                                      widget.documentSnapshot[
+                                                          'email'])
+                                              ? Text("request",
+                                                  style: TextStyle(
+                                                      color:
+                                                          Colors.indigoAccent))
+                                              : Text(
+                                                  "Add friends",
+                                                ),
+                                        ),
+                                      ),
                                     ),
                                   ),
-                                ),
-                              ),
                         Useremail.useremailget ==
                                 widget.documentSnapshot['email']
                             ? Container()
@@ -364,6 +436,12 @@ class _UserProfileState extends State<UserProfile> {
                             UserAllPost(
                               documentSnapshot: widget.documentSnapshot,
                             ),
+                            UserAllfriends(
+                              documentSnapshot: widget.documentSnapshot,
+                            ),
+                            Userallfollowers(
+                              documentSnapshot: widget.documentSnapshot,
+                            )
                           ],
                         ),
                       ),
