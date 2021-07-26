@@ -11,6 +11,8 @@ import 'Provider/commentfunction.dart';
 import 'Provider/friendreq.dart';
 import 'Provider/imageupload.dart';
 import 'Provider/likefunction.dart';
+import 'Provider/myday.dart';
+import 'Provider/userchatpage.dart';
 import 'Provider/userprofile.dart';
 
 void main() async {
@@ -20,6 +22,8 @@ void main() async {
   var finalemail = sharedPreferences.getString('email');
   runApp(MultiProvider(
       providers: [
+        ChangeNotifierProvider(create: (context) => Userchatpageprovider()),
+        ChangeNotifierProvider(create: (context) =>  MydayProvider()),
         ChangeNotifierProvider(create: (context) => FriendreqProvider()),
         ChangeNotifierProvider(create: (context) => Userprofileprovider()),
         ChangeNotifierProvider(create: (context) => CommentFunction()),

@@ -12,7 +12,6 @@ class FriendReqPage extends StatefulWidget {
 }
 
 class _FriendReqPageState extends State<FriendReqPage> {
-
   @override
   Widget build(BuildContext context) {
     final friendsreq = Provider.of<FriendreqProvider>(context);
@@ -83,7 +82,8 @@ class _FriendReqPageState extends State<FriendReqPage> {
                                                 SizedBox(
                                                   height: 5.0,
                                                 ),
-                                                data['acceptedfriendreq'] == false
+                                                data['acceptedfriendreq'] ==
+                                                        false
                                                     ? Row(
                                                         mainAxisAlignment:
                                                             MainAxisAlignment
@@ -111,7 +111,6 @@ class _FriendReqPageState extends State<FriendReqPage> {
                                                                         'username'],
                                                                     accountuserdata[
                                                                         'profilepicurl']);
-                                                               
 
                                                                 Future.delayed(
                                                                     Duration(

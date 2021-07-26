@@ -20,24 +20,23 @@ class _PostPagesState extends State<PostPages> {
   Widget build(BuildContext context) {
     final firebasedata = Provider.of<FirebasedataProvider>(context);
     final likefunction = Provider.of<Likeprovider>(context);
-    return SingleChildScrollView(
-      child: Container(
-          child: Column(
-        children: [
-          AppbarPage(
-            appbarname: "Social App",
-          ),
-          Container(
-            height: 70.0,
-            width: double.infinity,
+    return Container(
+        child: Column(
+      children: [
+        AppbarPage(
+          appbarname: "Social App",
+        ),
+        Flexible(
+          flex: 2,
+          child: Container(
             child: ListView.builder(
               scrollDirection: Axis.horizontal,
               itemCount: 5,
               itemBuilder: (context, index) {
                 return Container(
                   margin: EdgeInsets.symmetric(horizontal: 5.0, vertical: 10.0),
-                  width: 50.0,
                   decoration: BoxDecoration(
+                      color: Colors.green,
                       borderRadius: BorderRadius.circular(10.0),
                       border: index == 0 ? Border.all() : null),
                   child: Column(
@@ -61,9 +60,10 @@ class _PostPagesState extends State<PostPages> {
               },
             ),
           ),
-          Container(
-              height: MediaQuery.of(context).size.height - 158,
-              width: double.infinity,
+        ),
+        Flexible(
+          flex: 8,
+          child: Container(
               child: StreamBuilder<QuerySnapshot>(
                   stream: firebasedata.getuserpostfirebase(),
                   builder: (context, snapshot) {
@@ -72,8 +72,9 @@ class _PostPagesState extends State<PostPages> {
                           itemCount: snapshot.data!.docs.length,
                           itemBuilder: (context, index) {
                             var postdocumets = snapshot.data!.docs[index];
-                            return Card(
+                            return Container(
                               child: Container(
+                                margin: EdgeInsets.symmetric(vertical: 10.0),
                                 padding: EdgeInsets.only(
                                   left: 10.0,
                                   bottom: 10.0,
@@ -336,8 +337,8 @@ class _PostPagesState extends State<PostPages> {
                           child: Center(child: CircularProgressIndicator()));
                     }
                   })),
-        ],
-      )),
-    );
+        ),
+      ],
+    ));
   }
 }

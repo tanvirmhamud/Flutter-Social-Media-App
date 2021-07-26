@@ -1,10 +1,12 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_social_media/Provider/friendreq.dart';
+import 'package:flutter_social_media/Provider/userchatpage.dart';
 import 'package:flutter_social_media/Provider/userprofile.dart';
 import 'package:flutter_social_media/Widgets/userallfollowers.dart';
 import 'package:flutter_social_media/Widgets/userallfriends.dart';
 import 'package:flutter_social_media/Widgets/userallpost.dart';
+import 'package:flutter_social_media/Widgets/userchatpage.dart';
 import 'package:flutter_social_media/Widgets/useremail.dart';
 import 'package:provider/provider.dart';
 
@@ -22,6 +24,7 @@ class _UserProfileState extends State<UserProfile> {
   Widget build(BuildContext context) {
     final userallpost = Provider.of<Userprofileprovider>(context);
     final friendfunction = Provider.of<FriendreqProvider>(context);
+    final chatfunction = Provider.of<Userchatpageprovider>(context);
     return Scaffold(
       body: SafeArea(
         child: StreamBuilder<DocumentSnapshot>(
@@ -93,7 +96,18 @@ class _UserProfileState extends State<UserProfile> {
                                 child: Material(
                                   color: Colors.transparent,
                                   child: InkWell(
-                                    onTap: () {},
+                                    onTap: () {
+                                      chatfunction.chatroomcreated(
+                                          Useremail.useremailget,
+                                          widget.documentSnapshot['email']);
+                                      Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                            builder: (context) => Userchatpage(
+                                                documentSnapshot:
+                                                    widget.documentSnapshot),
+                                          ));
+                                    },
                                     borderRadius: BorderRadius.circular(5.0),
                                     focusColor: Colors.indigo,
                                     highlightColor: Colors.indigo,

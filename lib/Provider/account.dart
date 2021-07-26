@@ -72,6 +72,7 @@ class Accountprovider extends ChangeNotifier {
     }).then((value) {
       print("Added Successfull");
     });
+
     notifyListeners();
   }
 

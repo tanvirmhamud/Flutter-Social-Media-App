@@ -9,6 +9,7 @@ import 'package:flutter_social_media/Widgets/appbar.dart';
 import 'package:flutter_social_media/Widgets/bottomnavigation.dart';
 import 'package:flutter_social_media/Widgets/drawer.dart';
 import 'package:flutter_social_media/Widgets/useremail.dart';
+import 'package:flutter_social_media/Pages/postpage2.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class Homepage extends StatefulWidget {
@@ -54,7 +55,7 @@ class _HomepageState extends State<Homepage> {
               curve: Curves.easeInOutCubic);
         },
       ),
-      drawer: DrawerPage(),
+
       // appBar: AppBar(
       //   iconTheme: IconThemeData(color: Colors.black),
       //   backgroundColor: Colors.white,
@@ -91,7 +92,8 @@ class _HomepageState extends State<Homepage> {
                   },
                   controller: _pageController,
                   children: [
-                    PostPages(),
+                    // PostPages(),
+                    PostPage2(),
                     ChatPage(),
                     PostAddPage(),
                     NotificationPage(),
