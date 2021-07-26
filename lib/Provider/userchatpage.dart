@@ -4,61 +4,92 @@ import 'package:flutter/material.dart';
 class Userchatpageprovider extends ChangeNotifier {
   final FirebaseFirestore db = FirebaseFirestore.instance;
 
-
-  
-
-
-
-  Future? chatroomcreated(String accountuseremail, String chatuseremail) async {
-    await db
-        .collection("users")
-        .doc(accountuseremail)
-        .collection('message')
-        // ignore: unnecessary_brace_in_string_interps
-        .doc("${accountuseremail}_${chatuseremail}")
-        .set({
-      // ignore: unnecessary_brace_in_string_interps
-      "chatroom_id": "${accountuseremail}_${chatuseremail}",
-      // ignore: unnecessary_brace_in_string_interps
-      "users":
-          FieldValue.arrayUnion(["${accountuseremail}", "${chatuseremail}"])
-    });
-    await db
-        .collection("users")
-        .doc(chatuseremail)
-        .collection('message')
-        // ignore: unnecessary_brace_in_string_interps
-        .doc("${chatuseremail}_${accountuseremail}")
-        .set({
-      // ignore: unnecessary_brace_in_string_interps
-      "chatroom_id": "${chatuseremail}_${accountuseremail}",
-      // ignore: unnecessary_brace_in_string_interps
-      "users":
-          FieldValue.arrayUnion(["${accountuseremail}", "${chatuseremail}"])
-    });
-
-    // await db
-    //     .collection("users")
-    //     .doc(accountuseremail)
-    //     .collection('message')
-    //     // ignore: unnecessary_brace_in_string_interps
-    //     .doc("${accountuseremail}_${chatuseremail}")
-    //     .collection('chats')
-    //     .add({"message": messagetext, "message_by": accountuseremail});
-
-    //  await db
-    //     .collection("users")
-    //     .doc(chatuseremail)
-    //     .collection('message')
-    //     // ignore: unnecessary_brace_in_string_interps
-    //     .doc("${chatuseremail}_${accountuseremail}")
-    //     .collection('chats')
-    //     .add({"message": messagetext, "message_by": accountuseremail});
+  Stream<DocumentSnapshot>? getchatuser(String chatuseremail) {
+    return db.collection("users").doc(chatuseremail).snapshots();
   }
 
+  Stream<QuerySnapshot>? allchatuser(String accountuseremail) {
+    return db
+        .collection('users')
+        .doc(accountuseremail)
+        .collection('message')
+        .snapshots();
+  }
 
+  Stream<DocumentSnapshot>? getchatroom(
+      String accountuseremail, String chatuseremail) {
+    return db
+        .collection('users')
+        .doc(accountuseremail)
+        .collection('message')
+        // ignore: unnecessary_brace_in_string_interps
+        .doc("${accountuseremail}_${chatuseremail}")
+        .snapshots();
+  }
 
-  Future? sendmessage(String accountuseremail, String chatuseremail, String messagetext) async {
+  Stream<QuerySnapshot>? getmessage(
+      String accountuseremail, String chatuseremail) {
+    return db
+        .collection("users")
+        .doc(accountuseremail)
+        .collection('message')
+        // ignore: unnecessary_brace_in_string_interps
+        .doc("${accountuseremail}_${chatuseremail}")
+        .collection("chats")
+        .snapshots();
+  }
+
+  Future? chatroomcreated(
+      String accountuseremail,
+      String chatuseremail,
+      String chatuserfastname,
+      chatuserlastname,
+      chatuserprofilepic,
+      String accountfastname,
+      accountlastname,
+      accountprofilepic) async {
+    await db
+        .collection("users")
+        .doc(accountuseremail)
+        .collection('message')
+        // ignore: unnecessary_brace_in_string_interps
+        .doc("${accountuseremail}_${chatuseremail}")
+        .set({
+      "fastname": chatuserfastname,
+      "lastname": chatuserlastname,
+      "profilepic": chatuserprofilepic,
+      "email": chatuseremail,
+      // ignore: unnecessary_brace_in_string_interps
+      "chatroom_id": "${accountuseremail}_${chatuseremail}",
+      "sendmessage": false,
+      // ignore: unnecessary_brace_in_string_interps
+      "users":
+          // ignore: unnecessary_brace_in_string_interps
+          FieldValue.arrayUnion(["${accountuseremail}", "${chatuseremail}"])
+    });
+    await db
+        .collection("users")
+        .doc(chatuseremail)
+        .collection('message')
+        // ignore: unnecessary_brace_in_string_interps
+        .doc("${chatuseremail}_${accountuseremail}")
+        .set({
+      "fastname": accountfastname,
+      "lastname": accountlastname,
+      "profilepic": accountprofilepic,
+      "email": accountuseremail,
+      // ignore: unnecessary_brace_in_string_interps
+      "chatroom_id": "${chatuseremail}_${accountuseremail}",
+      "sendmessage": false,
+      // ignore: unnecessary_brace_in_string_interps
+      "users":
+          // ignore: unnecessary_brace_in_string_interps
+          FieldValue.arrayUnion(["${accountuseremail}", "${chatuseremail}"])
+    });
+  }
+
+  Future? sendmessage(
+      String accountuseremail, String chatuseremail, String messagetext) async {
     await db
         .collection("users")
         .doc(accountuseremail)
@@ -67,8 +98,17 @@ class Userchatpageprovider extends ChangeNotifier {
         .doc("${accountuseremail}_${chatuseremail}")
         .collection('chats')
         .add({"message": messagetext, "message_by": accountuseremail});
+    await db
+        .collection("users")
+        .doc(accountuseremail)
+        .collection('message')
+        // ignore: unnecessary_brace_in_string_interps
+        .doc("${accountuseremail}_${chatuseremail}")
+        .update({
+      "sendmessage": true,
+    });
 
-     await db
+    await db
         .collection("users")
         .doc(chatuseremail)
         .collection('message')
@@ -76,5 +116,15 @@ class Userchatpageprovider extends ChangeNotifier {
         .doc("${chatuseremail}_${accountuseremail}")
         .collection('chats')
         .add({"message": messagetext, "message_by": accountuseremail});
+
+    await db
+        .collection("users")
+        .doc(chatuseremail)
+        .collection('message')
+        // ignore: unnecessary_brace_in_string_interps
+        .doc("${chatuseremail}_${accountuseremail}")
+        .update({
+      "sendmessage": true,
+    });
   }
 }

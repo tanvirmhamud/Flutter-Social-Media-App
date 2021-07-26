@@ -20,157 +20,182 @@ class _UserchatpageState extends State<Userchatpage> {
   Widget build(BuildContext context) {
     final chatfunction = Provider.of<Userchatpageprovider>(context);
     return Scaffold(
-      backgroundColor: Colors.grey,
-      body: StreamBuilder<DocumentSnapshot>(
-          stream: chatfunction.db
-              .collection("users")
-              .doc(Useremail.useremailget)
-              .snapshots(),
-          builder: (context, snapshot) {
-            if (snapshot.hasData) {
-              return Container(
-                height: MediaQuery.of(context).size.height,
-                width: MediaQuery.of(context).size.width,
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Container(
-                      height: 90.0,
-                      color: Colors.indigoAccent,
-                      child: Container(
-                        margin: EdgeInsets.only(top: 30.0, left: 0.0),
-                        child: Row(
-                          children: [
-                            IconButton(
-                                onPressed: () {
-                                  Navigator.pop(context);
-                                },
-                                icon: Icon(
-                                  Icons.arrow_back,
-                                  color: Colors.white,
-                                )),
-                            CircleAvatar(
-                              backgroundImage: NetworkImage(
-                                  widget.documentSnapshot['profilepic']),
-                              maxRadius: 23,
-                            ),
-                            SizedBox(
-                              width: 10.0,
-                            ),
-                            Text(
-                              "${widget.documentSnapshot['fastname']} ${widget.documentSnapshot['lastname']}",
-                              style: TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 17,
-                                  fontWeight: FontWeight.bold,
-                                  letterSpacing: 0.5),
-                            )
-                          ],
-                        ),
-                      ),
-                    ),
-                    Flexible(
-                      child: StreamBuilder<QuerySnapshot>(
-                        stream: null,
-                        builder: (context, snapshot) {
-                          return ListView.builder(
-                            itemCount: 10,
-                            itemBuilder: (context, index) {
-                              return Container(
-                                margin: EdgeInsets.all(10.0),
-                                height: 100.0,
-                                color: Colors.green,
-                              );
-                            },
-                          );
-                        }
-                      ),
-                    ),
-                    Container(
-                      height: 50.0,
-                      color: Colors.white,
+      backgroundColor: Colors.white,
+      body: SafeArea(
+        child: Container(
+          child: StreamBuilder<DocumentSnapshot>(
+              stream: chatfunction.db
+                  .collection("users")
+                  .doc(Useremail.useremailget)
+                  .snapshots(),
+              builder: (context, snapshot) {
+                if (snapshot.hasData) {
+                  return Material(
+                    elevation: 5,
+                    child: Container(
                       child: Column(
                         children: [
-                          Divider(
-                            height: 0.0,
-                          ),
-                          Flexible(
+                          Container(
+                            color: Colors.white,
+                            height: 60.0,
                             child: Container(
+                              margin: EdgeInsets.only(top: 0.0, left: 0.0),
                               child: Row(
                                 children: [
                                   IconButton(
-                                      onPressed: () {},
-                                      icon: Icon(Icons.camera)),
-                                  Flexible(
-                                    child: Container(
-                                      padding: EdgeInsets.all(5),
-                                      child: TextFormField(
-                                        onChanged: (value) {
-                                          if (value.isNotEmpty) {
-                                            setState(() {
-                                              sendbutton = true;
-                                              messagetext = value;
-                                            });
-                                          } else {
-                                            setState(() {
-                                              sendbutton = false;
-                                            });
-                                          }
-                                        },
-                                        keyboardType: TextInputType.multiline,
-                                        maxLines: 3,
-                                        minLines: 1,
-                                        autofocus: true,
-                                        decoration: InputDecoration(
-                                          fillColor: Colors.grey[300],
-                                          filled: true,
-                                          hintText: "Write something....",
-                                          border: InputBorder.none,
-                                          contentPadding: EdgeInsets.only(
-                                            top: 5.0,
-                                            left: 10.0,
-                                          ),
-                                          focusedBorder: OutlineInputBorder(
-                                            borderSide: BorderSide(
-                                                color: Color(0xFFE0E0E0)),
-                                            borderRadius:
-                                                BorderRadius.circular(10.0),
-                                          ),
-                                          enabledBorder: OutlineInputBorder(
-                                            borderSide: BorderSide(
-                                                color: Color(0xFFE0E0E0)),
-                                            borderRadius:
-                                                BorderRadius.circular(10.0),
-                                          ),
-                                        ),
-                                      ),
-                                    ),
+                                      onPressed: () {
+                                        Navigator.pop(context);
+                                      },
+                                      icon: Icon(
+                                        Icons.arrow_back,
+                                        color: Colors.black,
+                                      )),
+                                  CircleAvatar(
+                                    backgroundImage: NetworkImage(
+                                        widget.documentSnapshot['profilepic']),
+                                    maxRadius: 23,
                                   ),
-                                  sendbutton
-                                      ? IconButton(
-                                          onPressed: () {
-                                            chatfunction.sendmessage(
-                                                Useremail.useremailget,
-                                                widget
-                                                    .documentSnapshot['email'],
-                                                messagetext!);
-                                          },
-                                          icon: Icon(Icons.send))
-                                      : Container()
+                                  SizedBox(
+                                    width: 10.0,
+                                  ),
+                                  Text(
+                                    "${widget.documentSnapshot['fastname']} ${widget.documentSnapshot['lastname']}",
+                                    style: TextStyle(
+                                        color: Colors.black,
+                                        fontSize: 17,
+                                        fontWeight: FontWeight.bold,
+                                        letterSpacing: 0.5),
+                                  )
                                 ],
                               ),
                             ),
                           ),
+                          Divider(
+                            height: 0.0,
+                          ),
+                          Expanded(
+                            child: Container(
+                              child: StreamBuilder<QuerySnapshot>(
+                                  stream: chatfunction.getmessage(
+                                      Useremail.useremailget,
+                                      widget.documentSnapshot['email']),
+                                  builder: (context, snapshot) {
+                                    if (snapshot.hasData) {
+                                      return ListView.builder(
+                                        itemCount: snapshot.data!.docs.length,
+                                        itemBuilder: (context, index) {
+                                          return Container(
+                                            color: Colors.green,
+                                            margin: EdgeInsets.all(10),
+                                            child: Text(snapshot
+                                                .data!.docs[index]['message']),
+                                          );
+                                        },
+                                      );
+                                    } else {
+                                      return Container(
+                                        child:
+                                            Center(child: Text("no message")),
+                                      );
+                                    }
+                                  }),
+                            ),
+                          ),
+                          Container(
+                            height: 50.0,
+                            color: Colors.white,
+                            child: Column(
+                              children: [
+                                Divider(
+                                  height: 0.0,
+                                ),
+                                Flexible(
+                                  child: Container(
+                                    child: Row(
+                                      children: [
+                                        IconButton(
+                                            onPressed: () {},
+                                            icon: Icon(Icons.camera)),
+                                        Flexible(
+                                          child: Container(
+                                            padding: EdgeInsets.all(5),
+                                            child: TextFormField(
+                                              onChanged: (value) {
+                                                if (value.isNotEmpty) {
+                                                  setState(() {
+                                                    sendbutton = true;
+                                                    messagetext = value;
+                                                  });
+                                                } else {
+                                                  setState(() {
+                                                    sendbutton = false;
+                                                  });
+                                                }
+                                              },
+                                              keyboardType:
+                                                  TextInputType.multiline,
+                                              maxLines: 3,
+                                              minLines: 1,
+                                              autofocus: true,
+                                              decoration: InputDecoration(
+                                                fillColor: Colors.grey[300],
+                                                filled: true,
+                                                hintText: "Write something....",
+                                                border: InputBorder.none,
+                                                contentPadding: EdgeInsets.only(
+                                                  top: 5.0,
+                                                  left: 10.0,
+                                                ),
+                                                focusedBorder:
+                                                    OutlineInputBorder(
+                                                  borderSide: BorderSide(
+                                                      color: Color(0xFFE0E0E0)),
+                                                  borderRadius:
+                                                      BorderRadius.circular(
+                                                          10.0),
+                                                ),
+                                                enabledBorder:
+                                                    OutlineInputBorder(
+                                                  borderSide: BorderSide(
+                                                      color: Color(0xFFE0E0E0)),
+                                                  borderRadius:
+                                                      BorderRadius.circular(
+                                                          10.0),
+                                                ),
+                                              ),
+                                            ),
+                                          ),
+                                        ),
+                                        sendbutton
+                                            ? IconButton(
+                                                onPressed: () {
+                                                  chatfunction.sendmessage(
+                                                      Useremail.useremailget,
+                                                      widget.documentSnapshot[
+                                                          'email'],
+                                                      messagetext!);
+                                                },
+                                                icon: Icon(Icons.send))
+                                            : Container()
+                                      ],
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          )
                         ],
                       ),
-                    )
-                  ],
-                ),
-              );
-            } else {
-              return Container();
-            }
-          }),
+                    ),
+                  );
+                } else {
+                  return Container(
+                    child: CircularProgressIndicator(),
+                  );
+                }
+              }),
+        ),
+      ),
     );
   }
 }

@@ -99,7 +99,13 @@ class _UserProfileState extends State<UserProfile> {
                                     onTap: () {
                                       chatfunction.chatroomcreated(
                                           Useremail.useremailget,
-                                          widget.documentSnapshot['email']);
+                                          widget.documentSnapshot['email'],
+                                          widget.documentSnapshot['fastname'],
+                                          widget.documentSnapshot['lastname'],
+                                          widget.documentSnapshot['profilepic'],
+                                          useraccountdata!['fastname'],
+                                          useraccountdata['lastname'],
+                                          useraccountdata['profilepicurl']);
                                       Navigator.push(
                                           context,
                                           MaterialPageRoute(
