@@ -35,7 +35,6 @@ class _PostPage2State extends State<PostPage2> {
                     SliverAppBar(
                       iconTheme: IconThemeData(color: Colors.black),
                       backgroundColor: Colors.white,
-                      floating: true,
                       title: Text(
                         "Social App",
                         style: TextStyle(color: Colors.black),

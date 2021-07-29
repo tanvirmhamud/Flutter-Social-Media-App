@@ -36,6 +36,7 @@ class Userchatpageprovider extends ChangeNotifier {
         // ignore: unnecessary_brace_in_string_interps
         .doc("${accountuseremail}_${chatuseremail}")
         .collection("chats")
+        .orderBy("time", descending: true)
         .snapshots();
   }
 
@@ -97,7 +98,13 @@ class Userchatpageprovider extends ChangeNotifier {
         // ignore: unnecessary_brace_in_string_interps
         .doc("${accountuseremail}_${chatuseremail}")
         .collection('chats')
-        .add({"message": messagetext, "message_by": accountuseremail});
+        .doc(DateTime.now().millisecondsSinceEpoch.toString())
+        .set({
+      "message": messagetext,
+      "messagefrom": accountuseremail,
+      "messageto": chatuseremail,
+      "time": DateTime.now().millisecondsSinceEpoch
+    });
     await db
         .collection("users")
         .doc(accountuseremail)
@@ -115,7 +122,13 @@ class Userchatpageprovider extends ChangeNotifier {
         // ignore: unnecessary_brace_in_string_interps
         .doc("${chatuseremail}_${accountuseremail}")
         .collection('chats')
-        .add({"message": messagetext, "message_by": accountuseremail});
+        .doc(DateTime.now().millisecondsSinceEpoch.toString())
+        .set({
+      "message": messagetext,
+      "messagefrom": accountuseremail,
+      "messageto": chatuseremail,
+      "time": DateTime.now().millisecondsSinceEpoch
+    });
 
     await db
         .collection("users")
