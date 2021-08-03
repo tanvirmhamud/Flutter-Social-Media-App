@@ -94,51 +94,60 @@ class Mydaypagesliver extends StatelessWidget {
                                                       horizontal: 5.0,
                                                       vertical: 10.0),
                                                   decoration: BoxDecoration(
-                                                    color: Colors.green,
                                                     borderRadius:
                                                         BorderRadius.circular(
                                                             10.0),
                                                   ),
-                                                  child: Column(
-                                                    children: [
-                                                      InkWell(
-                                                        borderRadius:
-                                                            BorderRadius
-                                                                .circular(10.0),
-                                                        onTap: () {
-                                                          showModalBottomSheet(
-                                                              context: context,
-                                                              builder:
-                                                                  (context) =>
-                                                                      MydayView(
-                                                                        documentSnapshot:
-                                                                            data,
-                                                                      ),
-                                                              isScrollControlled:
-                                                                  true);
-                                                        },
-                                                        child: ClipRRect(
+                                                  child: Material(
+                                                    elevation: 2,
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            10.0),
+                                                    child: Column(
+                                                      children: [
+                                                        InkWell(
                                                           borderRadius:
                                                               BorderRadius
                                                                   .circular(
                                                                       10.0),
-                                                          child: Container(
-                                                            height: 210.0,
-                                                            width: 120.0,
-                                                            child:
-                                                                Image.network(
-                                                              data['myday'][0],
-                                                              fit: BoxFit.cover,
+                                                          onTap: () {
+                                                            showModalBottomSheet(
+                                                                context:
+                                                                    context,
+                                                                builder:
+                                                                    (context) =>
+                                                                        MydayView(
+                                                                          documentSnapshot:
+                                                                              data,
+                                                                        ),
+                                                                isScrollControlled:
+                                                                    true);
+                                                          },
+                                                          child: ClipRRect(
+                                                            borderRadius:
+                                                                BorderRadius
+                                                                    .circular(
+                                                                        10.0),
+                                                            child: Container(
+                                                              height: 210.0,
+                                                              width: 120.0,
+                                                              child:
+                                                                  Image.network(
+                                                                data['myday']
+                                                                    [0],
+                                                                fit: BoxFit
+                                                                    .cover,
+                                                              ),
                                                             ),
                                                           ),
                                                         ),
-                                                      ),
-                                                    ],
+                                                      ],
+                                                    ),
                                                   ),
                                                 ),
                                                 Positioned(
                                                   top: 15,
-                                                  bottom: 172,
+                                                  bottom: 175,
                                                   left: 10,
                                                   right: 80,
                                                   child: Container(

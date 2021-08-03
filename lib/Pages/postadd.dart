@@ -4,10 +4,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_social_media/Provider/firebasedata.dart';
-import 'package:flutter_social_media/Provider/imageupload.dart';
-import 'package:flutter_social_media/Provider/otherfunction.dart';
 import 'package:flutter_social_media/Widgets/useremail.dart';
-import 'package:flutter_social_media/homepage.dart';
 import 'package:provider/provider.dart';
 
 class PostAddPage extends StatefulWidget {
@@ -19,7 +16,7 @@ class PostAddPage extends StatefulWidget {
 
 class _PostAddPageState extends State<PostAddPage> {
   List<String>? savetext;
-  List<String>? savetext2;
+
 
   final formkey = GlobalKey<FormState>();
 
@@ -27,12 +24,13 @@ class _PostAddPageState extends State<PostAddPage> {
 
   @override
   Widget build(BuildContext context) {
-    final textfield = Provider.of<OthderFunctionprovider>(context);
     final firebasedatas = Provider.of<FirebasedataProvider>(context);
     String? fastname, lastname, username, profilepic;
     bool imageupload = false;
 
-   firebasedatas.postaddimageFileList != null ? imageupload = true : imageupload = false;
+    firebasedatas.postaddimageFileList != null
+        ? imageupload = true
+        : imageupload = false;
 
     return Scaffold(
       floatingActionButton: Material(
@@ -66,15 +64,21 @@ class _PostAddPageState extends State<PostAddPage> {
               bottom: 10.0,
             ),
             child: ElevatedButton(
-                onPressed: textfield.text == null
+                onPressed: savetext == null
                     ? null
-                    : textfield.text!.isEmpty
+                    : savetext!.isEmpty
                         ? null
                         : () {
                             formkey.currentState!.save();
-
                             firebasedatas.firebasecreatedpostandimage(
-                                Useremail.useremailget, savetext!, context, fastname!, lastname ,username, profilepic, imageupload);
+                                Useremail.useremailget,
+                                savetext!,
+                                context,
+                                fastname!,
+                                lastname,
+                                username,
+                                profilepic,
+                                imageupload);
                             print("$savetext");
                             textEditingController.clear();
                           },
@@ -108,7 +112,9 @@ class _PostAddPageState extends State<PostAddPage> {
                                           Useremail.useremailget),
                                   builder: (context, snapshot) {
                                     if (snapshot.hasData) {
-                                      String profileurl = snapshot.data!.docs.map((e) => e['profile-imageurl']).first;
+                                      String profileurl = snapshot.data!.docs
+                                          .map((e) => e['profile-imageurl'])
+                                          .first;
                                       profilepic = profileurl;
                                       return CircleAvatar(
                                         backgroundImage:
@@ -163,7 +169,6 @@ class _PostAddPageState extends State<PostAddPage> {
                               onSaved: (newValue) {},
                               onChanged: (value) {
                                 setState(() {
-                                  textfield.settext(value);
                                   savetext = value.split("\n");
                                   print(savetext);
                                 });

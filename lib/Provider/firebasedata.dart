@@ -73,7 +73,7 @@ class FirebasedataProvider extends ChangeNotifier {
   }
 
   Future postimageupload() async {
-    final pickedFileList = await picker.pickMultiImage();
+    final pickedFileList = await picker.pickMultiImage(imageQuality: 50);
     postaddimageFileList = pickedFileList;
     notifyListeners();
   }
@@ -121,9 +121,86 @@ class FirebasedataProvider extends ChangeNotifier {
             builder: (context) => Homepage(),
           ));
       postaddimageFileList!.clear();
+      postaddimageFileList = null;
       imageurl.clear();
       notifyListeners();
     });
+    notifyListeners();
+  }
+
+  Future? updatepost(
+    String accountuseremail,
+    postid,
+    List<String> _post,
+  ) async {
+    await db
+        .collection("users")
+        .doc(accountuseremail)
+        .collection('post')
+        .doc(postid)
+        .update({
+      "post": _post,
+    });
+  }
+
+  Future? removefireaseimage(
+      String accountuseremail, postid, String imageurl, int imagelength) async {
+    if (imagelength < 2) {
+      await db
+          .collection('users')
+          .doc(accountuseremail)
+          .collection('post')
+          .doc(postid)
+          .update({
+        "imageuploadbool": false,
+      });
+    }
+    await db
+        .collection('users')
+        .doc(accountuseremail)
+        .collection('post')
+        .doc(postid)
+        .update({
+      "image": FieldValue.arrayRemove([imageurl])
+    });
+    notifyListeners();
+  }
+
+  Future? deletepost(String accountuseremail, postid) async {
+    await db
+        .collection('users')
+        .doc(accountuseremail)
+        .collection('post')
+        .doc(postid)
+        .delete();
+  }
+
+  Future? editpostimageupload(String accountuseremail, postid) async {
+    final pickedFileList = await picker.pickMultiImage(imageQuality: 50);
+    postaddimageFileList = pickedFileList;
+    if (postaddimageFileList != null) {
+      for (int i = 0; i < postaddimageFileList!.length; i++) {
+        var file = File(postaddimageFileList![i].path);
+        var snapshot = await _firebasestorage
+            .ref()
+            .child('postimage/${accountuseremail}/postimage$i')
+            .putFile(file);
+        imageurl.add(await snapshot.ref.getDownloadURL());
+        notifyListeners();
+      }
+    }
+    await db
+        .collection("users")
+        .doc(accountuseremail)
+        .collection('post')
+        .doc(postid)
+        .update({
+      "image": imageurl,
+      "imageuploadbool": true,
+    });
+    postaddimageFileList!.clear();
+    postaddimageFileList = null;
+    imageurl.clear();
     notifyListeners();
   }
 }

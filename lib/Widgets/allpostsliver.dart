@@ -1,12 +1,15 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_social_media/Pages/userprofile.dart';
+import 'package:flutter_social_media/Provider/firebasedata.dart';
 import 'package:flutter_social_media/Provider/likefunction.dart';
+import 'package:flutter_social_media/Widgets/editpost.dart';
 import 'package:flutter_social_media/Widgets/useremail.dart';
+import 'package:provider/provider.dart';
 
 import 'commentbuttomsheet.dart';
 
-class Allpostshow extends StatelessWidget {
+class Allpostshow extends StatefulWidget {
   const Allpostshow({
     Key? key,
     required this.postdocumets,
@@ -17,7 +20,19 @@ class Allpostshow extends StatelessWidget {
   final Likeprovider likefunction;
 
   @override
+  _AllpostshowState createState() => _AllpostshowState();
+}
+
+class _AllpostshowState extends State<Allpostshow> {
+  final GlobalKey _menuKey = new GlobalKey();
+  List<PopupMenuEntry> popuplist = [
+    PopupMenuItem(child: Text("Edit")),
+    PopupMenuItem(child: Text("Delete")),
+  ];
+
+  @override
   Widget build(BuildContext context) {
+    final firebasedata = Provider.of<FirebasedataProvider>(context);
     return Container(
       color: Colors.white,
       margin: EdgeInsets.only(bottom: 10.0),
@@ -30,13 +45,13 @@ class Allpostshow extends StatelessWidget {
           children: [
             Row(
               children: [
-                postdocumets['profilepic'] == null
+                widget.postdocumets['profilepic'] == null
                     ? CircleAvatar(
                         backgroundImage: AssetImage('images/profilepic.jpg'),
                       )
                     : CircleAvatar(
                         backgroundImage:
-                            NetworkImage(postdocumets['profilepic']),
+                            NetworkImage(widget.postdocumets['profilepic']),
                       ),
                 InkWell(
                   onTap: () {
@@ -44,7 +59,7 @@ class Allpostshow extends StatelessWidget {
                         context,
                         MaterialPageRoute(
                           builder: (context) => UserProfile(
-                            documentSnapshot: postdocumets,
+                            documentSnapshot: widget.postdocumets,
                           ),
                         ));
                   },
@@ -54,12 +69,12 @@ class Allpostshow extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                            "${postdocumets['fastname']} ${postdocumets['lastname']}"),
+                            "${widget.postdocumets['fastname']} ${widget.postdocumets['lastname']}"),
                         SizedBox(
                           height: 5.0,
                         ),
                         Text(
-                          "@${postdocumets['username']}",
+                          "@${widget.postdocumets['username']}",
                           style: TextStyle(color: Colors.grey[400]),
                         ),
                       ],
@@ -67,7 +82,33 @@ class Allpostshow extends StatelessWidget {
                   ),
                 ),
                 Spacer(),
-                IconButton(onPressed: () {}, icon: Icon(Icons.more_vert))
+                PopupMenuButton(
+                  itemBuilder: (context) => <PopupMenuItem<String>>[
+                    if (widget.postdocumets['email'] == Useremail.useremailget)
+                      new PopupMenuItem<String>(
+                          child: const Text('Edit'), value: 'Edit'),
+                    if (widget.postdocumets['email'] == Useremail.useremailget)
+                      new PopupMenuItem<String>(
+                          child: const Text('Delete'), value: 'Delete'),
+                    new PopupMenuItem<String>(
+                        child: const Text('Report'), value: 'Report'),
+                  ],
+                  onSelected: (value) {
+                    if (value == "Edit") {
+                      showModalBottomSheet(
+                        context: context,
+                        builder: (context) => Editpost(
+                          documents: widget.postdocumets,
+                        ),
+                        isScrollControlled: true,
+                      );
+                    }
+                    if (value == "Delete") {
+                      firebasedata.deletepost(
+                          Useremail.useremailget, widget.postdocumets.id);
+                    }
+                  },
+                )
               ],
             ),
             Column(
@@ -75,25 +116,25 @@ class Allpostshow extends StatelessWidget {
                 ListView.builder(
                   physics: NeverScrollableScrollPhysics(),
                   shrinkWrap: true,
-                  itemCount: postdocumets['post'].length,
+                  itemCount: widget.postdocumets['post'].length,
                   itemBuilder: (context, index) {
                     return Container(
                       padding: EdgeInsets.only(top: 10.0, right: 10.0),
-                      child: Text(postdocumets['post'][index]),
+                      child: Text(widget.postdocumets['post'][index]),
                     );
                   },
                 ),
                 SizedBox(
                   height: 10.0,
                 ),
-                postdocumets['imageuploadbool']
+                widget.postdocumets['imageuploadbool']
                     ? Container(
                         height: 250.0,
                         width: double.infinity,
                         child: ListView.builder(
                           shrinkWrap: true,
                           scrollDirection: Axis.horizontal,
-                          itemCount: postdocumets['image'].length,
+                          itemCount: widget.postdocumets['image'].length,
                           itemBuilder: (context, index) {
                             return Container(
                               margin: EdgeInsets.symmetric(horizontal: 10.0),
@@ -102,7 +143,7 @@ class Allpostshow extends StatelessWidget {
                               child: Container(
                                 child: ClipRRect(
                                   child: Image.network(
-                                    postdocumets['image'][index],
+                                    widget.postdocumets['image'][index],
                                     fit: BoxFit.cover,
                                   ),
                                   borderRadius: BorderRadius.circular(10.0),
@@ -123,7 +164,7 @@ class Allpostshow extends StatelessWidget {
             Row(
               children: [
                 Container(
-                  child: postdocumets['likeuser'].length < 1
+                  child: widget.postdocumets['likeuser'].length < 1
                       ? Container()
                       : Row(
                           children: [
@@ -134,19 +175,19 @@ class Allpostshow extends StatelessWidget {
                             SizedBox(
                               width: 4.0,
                             ),
-                            Text("${postdocumets['likeuser'].length}"),
+                            Text("${widget.postdocumets['likeuser'].length}"),
                           ],
                         ),
                 ),
                 Spacer(),
-                postdocumets['comments'] == false
+                widget.postdocumets['comments'] == false
                     ? Container()
                     : Container(
                         margin: EdgeInsets.only(right: 10.0),
                         child: Row(
                           children: [
                             StreamBuilder<QuerySnapshot>(
-                              stream: postdocumets.reference
+                              stream: widget.postdocumets.reference
                                   .collection('comments')
                                   .snapshots(),
                               builder: (context, snapshot) {
@@ -181,23 +222,23 @@ class Allpostshow extends StatelessWidget {
               children: [
                 InkWell(
                   onTap: () {
-                    if (postdocumets['likeuser']
+                    if (widget.postdocumets['likeuser']
                         .contains(Useremail.useremailget)) {
-                      likefunction.removelike(
-                          postemail: postdocumets['email'],
-                          postid: postdocumets.id,
+                      widget.likefunction.removelike(
+                          postemail: widget.postdocumets['email'],
+                          postid: widget.postdocumets.id,
                           accountuseremail: Useremail.useremailget);
                     } else {
-                      likefunction.getlike(
-                          postemail: postdocumets['email'],
-                          postid: postdocumets.id,
+                      widget.likefunction.getlike(
+                          postemail: widget.postdocumets['email'],
+                          postid: widget.postdocumets.id,
                           accountuseremail: Useremail.useremailget);
                     }
                   },
                   child: Container(
                     child: Row(
                       children: [
-                        Icon(postdocumets['likeuser']
+                        Icon(widget.postdocumets['likeuser']
                                 .contains(Useremail.useremailget)
                             ? Icons.favorite
                             : Icons.favorite_border),
@@ -211,7 +252,7 @@ class Allpostshow extends StatelessWidget {
                     showModalBottomSheet(
                         context: context,
                         builder: (context) => CommentButtomSheet(
-                              documentSnapshot: postdocumets,
+                              documentSnapshot: widget.postdocumets,
                             ),
                         isScrollControlled: true);
                   },
