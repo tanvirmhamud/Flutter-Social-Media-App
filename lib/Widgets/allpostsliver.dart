@@ -24,7 +24,6 @@ class Allpostshow extends StatefulWidget {
 }
 
 class _AllpostshowState extends State<Allpostshow> {
-  final GlobalKey _menuKey = new GlobalKey();
   List<PopupMenuEntry> popuplist = [
     PopupMenuItem(child: Text("Edit")),
     PopupMenuItem(child: Text("Delete")),
